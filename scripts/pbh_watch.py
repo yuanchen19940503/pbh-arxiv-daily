@@ -1,103 +1,105 @@
 import json
 import os
 import re
-from datetime import datetime, timezone
-from email.utils import parsedate_to_datetime
+from datetime import datetime
+import requests
+from bs4 import BeautifulSoup
 
-import feedparser
-
-FEEDS = {
-    "astro-ph.CO": "https://rss.arxiv.org/rss/astro-ph.CO",
-    "gr-qc": "https://rss.arxiv.org/rss/gr-qc",
+LIST_PAGES = {
+    "astro-ph.CO": "https://arxiv.org/list/astro-ph.CO/new",
+    "gr-qc": "https://arxiv.org/list/gr-qc/new",
 }
 
-# 关键词：primordial black hole(s) / PBH(s) 
 PATTERNS = [
     r"primordial\s+black\s+holes?",
     r"\bPBHs?\b",
 ]
 REGEX = re.compile("|".join(PATTERNS), re.IGNORECASE)
 
+HEADERS = {
+    "User-Agent": "pbh-arxiv-daily (GitHub Actions); contact: your-email@example.com"
+}
 
 def ensure_dirs():
     os.makedirs("docs/data", exist_ok=True)
 
+def clean_label(s: str, label: str) -> str:
+    s = (s or "").strip()
+    if s.lower().startswith(label.lower()):
+        return s[len(label):].strip()
+    return s
 
-def parse_listing_date(feed) -> str:
+def parse_listing_date(soup: BeautifulSoup) -> str:
+    # e.g. "Showing new listings for Friday, 12 December 2025"
+    h3 = soup.find("h3", string=re.compile(r"Showing new listings for", re.I))
+    if not h3:
+        raise RuntimeError("Cannot find listing date header on /new page.")
+    text = h3.get_text(" ", strip=True)
+    m = re.search(r"Showing new listings for\s+(.*)$", text, re.I)
+    if not m:
+        raise RuntimeError(f"Cannot parse listing date from header: {text}")
+    date_str = m.group(1).strip()  # "Friday, 12 December 2025"
+    dt = datetime.strptime(date_str, "%A, %d %B %Y")
+    return dt.date().isoformat()
+
+def parse_section_entries(soup: BeautifulSoup, section_title_prefix: str):
     """
-    返回本次 new listings 的日期（YYYY-MM-DD）。
-    优先从 feed 标题里解析 “… for Fri, 12 Dec 2025”；
-    其次用 feed 的 updated/published。
+    section_title_prefix: "New submissions" or "Cross-lists"
+    Return list of dicts with arxiv_id/title/authors/abstract/link.
     """
-    title = (feed.feed.get("title") or "").strip()
-    m = re.search(r"\bfor\s+(.+)$", title)
-    if m:
-        date_str = m.group(1).strip()
-        # 常见格式：Fri, 12 Dec 2025
-        for fmt in ("%a, %d %b %Y", "%d %b %Y"):
-            try:
-                dt = datetime.strptime(date_str, fmt)
-                return dt.date().isoformat()
-            except ValueError:
-                pass
+    h3 = soup.find("h3", string=lambda s: s and s.strip().startswith(section_title_prefix))
+    if not h3:
+        return []
 
-    updated = (feed.feed.get("updated") or feed.feed.get("published") or "").strip()
-    if updated:
-        try:
-            dt = parsedate_to_datetime(updated)
-            return dt.astimezone(timezone.utc).date().isoformat()
-        except Exception:
-            pass
+    dl = h3.find_next_sibling("dl")
+    if not dl:
+        return []
 
-    # 实在解析不到就退回到“今天”（不推荐，但保证不崩）
-    return datetime.now(timezone.utc).date().isoformat()
+    dts = dl.find_all("dt", recursive=False)
+    dds = dl.find_all("dd", recursive=False)
+    out = []
 
+    for dt, dd in zip(dts, dds):
+        # arXiv ID + link
+        abs_a = dt.find("a", title=re.compile("Abstract", re.I))
+        if not abs_a or not abs_a.get("href"):
+            continue
+        link = "https://arxiv.org" + abs_a["href"].strip()
+        arxiv_id = abs_a.get_text(strip=True).replace("arXiv:", "").strip()
 
-def entry_text(entry) -> str:
-    # feedparser 对 RSS/Atom 映射不完全一致：摘要可能在 summary 或 description 或 content
-    parts = []
-    parts.append(entry.get("title") or "")
-    parts.append(entry.get("summary") or "")
-    parts.append(entry.get("description") or "")
+        # title
+        title_div = dd.find("div", class_=re.compile(r"list-title"))
+        title = clean_label(title_div.get_text(" ", strip=True) if title_div else "", "Title:")
 
-    if entry.get("content"):
-        parts.append(" ".join([c.get("value", "") for c in entry.get("content", [])]))
+        # authors
+        auth_div = dd.find("div", class_=re.compile(r"list-authors"))
+        authors = []
+        if auth_div:
+            for a in auth_div.find_all("a"):
+                name = a.get_text(" ", strip=True)
+                if name:
+                    authors.append(name)
 
-    # 作者：优先 authors[].name，其次 dc_creator
-    if entry.get("authors"):
-        parts.append(" ".join([a.get("name", "") for a in entry.get("authors", [])]))
-    parts.append(entry.get("dc_creator") or "")
+        # abstract
+        abs_blk = dd.find("blockquote", class_=re.compile(r"abstract"))
+        abstract = ""
+        if abs_blk:
+            abstract = clean_label(abs_blk.get_text(" ", strip=True), "Abstract:")
 
-    return " ".join(parts)
+        out.append({
+            "category": section_title_prefix,   # 只是标注来源段落（New/Cross）
+            "arxiv_id": arxiv_id,
+            "title": title,
+            "authors": authors,
+            "abstract": abstract,
+            "link": link,
+        })
 
+    return out
 
-def get_authors(entry):
-    if entry.get("authors"):
-        return [a.get("name", "").strip() for a in entry.get("authors", []) if a.get("name")]
-    dc = (entry.get("dc_creator") or "").strip()
-    return [dc] if dc else []
-
-
-def is_replacement(entry) -> bool:
-    at = (entry.get("arxiv_announce_type") or "").lower()
-    if "replace" in at:
-        return True
-
-    # 兜底：有时 replacement 信息只在摘要文本里
-    txt = (entry.get("summary") or entry.get("description") or "").lower()
-    return "announce type: replace" in txt
-
-
-def extract_arxiv_id(entry) -> str:
-    txt = entry.get("summary") or entry.get("description") or ""
-    m = re.search(r"arXiv:(\d{4}\.\d{4,5})(v\d+)?", txt)
-    if m:
-        return m.group(1)
-
-    link = entry.get("link") or ""
-    m = re.search(r"/abs/(\d{4}\.\d{4,5})", link)
-    return m.group(1) if m else ""
-
+def is_match(item) -> bool:
+    hay = " ".join([item.get("title",""), item.get("abstract","")])
+    return bool(REGEX.search(hay))
 
 def load_json(path):
     if not os.path.exists(path):
@@ -105,11 +107,9 @@ def load_json(path):
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
-
 def write_json(path, obj):
     with open(path, "w", encoding="utf-8") as f:
         json.dump(obj, f, ensure_ascii=False, indent=2)
-
 
 def list_day_files():
     days = []
@@ -119,54 +119,44 @@ def list_day_files():
                 days.append(fn.replace(".json", ""))
     return sorted(days)
 
-
 def compute_stats(days):
-    total_papers = 0
+    total = 0
     author_count = {}
-
     for d in days:
         items = load_json(f"docs/data/{d}.json") or []
-        total_papers += len(items)
+        total += len(items)
         for it in items:
             for a in it.get("authors", []):
                 author_count[a] = author_count.get(a, 0) + 1
-
     top_authors = sorted(author_count.items(), key=lambda x: (-x[1], x[0]))[:30]
-    return {
-        "update_days": len(days),
-        "total_papers": total_papers,
-        "top_authors": top_authors,
-    }
+    return {"update_days": len(days), "total_papers": total, "top_authors": top_authors}
 
+def render_html(latest_day, items, stats, days_desc):
+    def esc(s):
+        return (s or "").replace("&", "&amp;").replace("<","&lt;").replace(">","&gt;")
 
-def render_html(latest_day, latest_items, stats, days_desc):
-    def esc(s: str) -> str:
-        return (s or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-
-    # 列表
-    if not latest_items:
+    if not items:
         items_html = "<p>该批次无匹配条目。</p>"
     else:
-        rows = []
-        for it in latest_items:
+        blocks = []
+        for it in items:
             authors = ", ".join(it.get("authors", []))
-            rows.append(
+            blocks.append(
                 "<div class='item'>"
-                f"<div class='id'><b>{esc(it.get('arxiv_id',''))}</b> <span class='cat'>{esc(it.get('category',''))}</span></div>"
+                f"<div><b>{esc(it.get('arxiv_id',''))}</b></div>"
                 f"<div class='title'><a href='{esc(it.get('link',''))}' target='_blank' rel='noopener'>{esc(it.get('title',''))}</a></div>"
                 f"<div class='authors authors-hidden'>{esc(authors)}</div>"
                 "</div>"
             )
-        items_html = "\n".join(rows)
+        items_html = "\n".join(blocks)
 
-    # 归档链接（最近 30 次更新）
     archive_links = ""
     for d in days_desc[:30]:
         archive_links += f"<li><a href='data/{d}.json' target='_blank' rel='noopener'>{d}.json</a></li>"
 
-    top_authors_html = ""
+    top_auth = ""
     for name, cnt in stats["top_authors"]:
-        top_authors_html += f"<li>{esc(name)} — {cnt}</li>"
+        top_auth += f"<li>{esc(name)} — {cnt}</li>"
 
     return f"""<!doctype html>
 <html lang="zh">
@@ -180,10 +170,7 @@ def render_html(latest_day, latest_items, stats, days_desc):
     .cols {{ display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }}
     @media (max-width: 900px) {{ .cols {{ grid-template-columns: 1fr; }} }}
     .item {{ padding: 12px 0; border-bottom: 1px solid #eee; }}
-    .id {{ font-size: 14px; }}
-    .cat {{ color: #666; margin-left: 8px; }}
-    .title {{ font-size: 16px; margin: 6px 0; }}
-    .authors {{ font-size: 13px; color: #333; }}
+    .title {{ margin: 6px 0; }}
     .authors-hidden {{ display: none; }}
     button {{ padding: 6px 10px; border: 1px solid #ccc; background: #fff; border-radius: 8px; cursor: pointer; }}
     code {{ background: #f6f8fa; padding: 2px 6px; border-radius: 6px; }}
@@ -192,7 +179,7 @@ def render_html(latest_day, latest_items, stats, days_desc):
 <body>
   <h1>PBH arXiv Daily ({latest_day})</h1>
   <div class="meta">
-    来源：<code>astro-ph.CO</code> 与 <code>gr-qc</code> 的 arXiv RSS；规则：匹配关键词（PBH / primordial black hole 等），排除 <code>announce_type</code> 含 <code>replace</code> 的条目。<br/>
+    来源：<code>astro-ph.CO/new</code> 与 <code>gr-qc/new</code>；规则：匹配关键词（PBH / primordial black hole），仅统计 New submissions + Cross-lists，不包含 Replacements。<br/>
     已记录 <b>{stats["update_days"]}</b> 次 arXiv 更新批次；累计匹配 <b>{stats["total_papers"]}</b> 篇。
   </div>
 
@@ -210,76 +197,78 @@ def render_html(latest_day, latest_items, stats, days_desc):
       <ul>{archive_links}</ul>
 
       <h2 style="margin-top:18px;">Top 作者（累计匹配次数）</h2>
-      <ol>{top_authors_html}</ol>
+      <ol>{top_auth}</ol>
     </div>
   </div>
 
 <script>
   document.getElementById("toggleAuthors").addEventListener("click", () => {{
-    document.querySelectorAll(".authors").forEach(el => {{
-      el.classList.toggle("authors-hidden");
-    }});
+    document.querySelectorAll(".authors").forEach(el => el.classList.toggle("authors-hidden"));
   }});
 </script>
 </body>
 </html>
 """
 
-
 def main():
     ensure_dirs()
 
-    # 读取两条 feed，并解析各自的“批次日期”
+    # 抓两个页面，并以“最新批次日期”为准（一般两者相同）
     parsed = {}
     dates = []
-    for cat, url in FEEDS.items():
-        f = feedparser.parse(url)
-        d = parse_listing_date(f)
-        parsed[cat] = (f, d)
-        dates.append(d)
 
-    # 最新批次日期（通常两者相同）
+    for name, url in LIST_PAGES.items():
+        r = requests.get(url, headers=HEADERS, timeout=30)
+        r.raise_for_status()
+        soup = BeautifulSoup(r.text, "html.parser")
+        day = parse_listing_date(soup)
+        dates.append(day)
+
+        items = []
+        items += parse_section_entries(soup, "New submissions")
+        items += parse_section_entries(soup, "Cross-lists")
+
+        # 写入时保留来源分类名（astro-ph.CO/gr-qc），便于统计
+        for it in items:
+            it["source"] = name
+
+        parsed[name] = (day, items)
+
     latest_day = max(dates)
 
-    # 只处理“最新批次”的 feed（避免出现一个更新、一个没更新时混在一起）
-    latest_items = []
-    for cat, (f, d) in parsed.items():
-        if d != latest_day:
+    # 合并两个页面中“属于同一批次日期”的条目
+    merged = []
+    for name, (day, items) in parsed.items():
+        if day != latest_day:
             continue
-        for e in f.entries:
-            if is_replacement(e):
-                continue
-            if not REGEX.search(entry_text(e)):
-                continue
-            latest_items.append({
-                "category": cat,
-                "arxiv_id": extract_arxiv_id(e),
-                "title": (e.get("title") or "").strip(),
-                "authors": get_authors(e),
-                "link": (e.get("link") or "").strip(),
-            })
+        for it in items:
+            if is_match(it):
+                merged.append({
+                    "source": it["source"],          # astro-ph.CO or gr-qc
+                    "arxiv_id": it["arxiv_id"],
+                    "title": it["title"],
+                    "authors": it["authors"],
+                    "link": it["link"],
+                })
 
     day_path = f"docs/data/{latest_day}.json"
     existing = load_json(day_path)
-    # 如果同一天已存在且结果完全一致，则不写入、不更新页面（等同于“今天没有新批次更新”）
-    if existing == latest_items:
-        print(f"No new arXiv batch (latest listing date: {latest_day}). Nothing to update.")
+    if existing == merged:
+        print(f"No new arXiv listings batch (listing date: {latest_day}). Nothing to update.")
         return
 
-    write_json(day_path, latest_items)
+    write_json(day_path, merged)
 
-    # 更新统计 + 首页
     days = list_day_files()
     days_desc = sorted(days, reverse=True)
     stats = compute_stats(days)
 
-    html = render_html(latest_day, latest_items, stats, days_desc)
+    html = render_html(latest_day, merged, stats, days_desc)
     with open("docs/index.html", "w", encoding="utf-8") as f:
         f.write(html)
 
     with open("docs/.nojekyll", "w", encoding="utf-8") as f:
         f.write("")
-
 
 if __name__ == "__main__":
     main()
