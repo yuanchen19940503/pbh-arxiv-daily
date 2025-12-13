@@ -43,63 +43,53 @@ def parse_listing_date(soup: BeautifulSoup) -> str:
     return dt.date().isoformat()
 
 def parse_section_entries(soup: BeautifulSoup, section_title_prefix: str):
-    """
-    section_title_prefix: "New submissions" or "Cross-lists"
-    Return list of dicts with arxiv_id/title/authors/abstract/link.
-    """
     h3 = soup.find("h3", string=lambda s: s and s.strip().startswith(section_title_prefix))
     if not h3:
         return []
-
-    dl = h3.find_next_sibling("dl")
+    dl = h3.find_next("dl")
     if not dl:
         return []
 
-    dts = dl.find_all("dt", recursive=False)
-    dds = dl.find_all("dd", recursive=False)
+    dts = dl.find_all("dt")
+    dds = dl.find_all("dd")
     out = []
 
     for dt, dd in zip(dts, dds):
-        # arXiv ID + link
+        # abs 链接：优先 title=Abstract，找不到就用 href=/abs/
         abs_a = dt.find("a", title=re.compile("Abstract", re.I))
+        if not abs_a:
+            abs_a = dt.find("a", href=re.compile(r"^/abs/"))
         if not abs_a or not abs_a.get("href"):
             continue
+
         link = "https://arxiv.org" + abs_a["href"].strip()
         arxiv_id = abs_a.get_text(strip=True).replace("arXiv:", "").strip()
 
-        # title
         title_div = dd.find("div", class_=re.compile(r"list-title"))
         title = clean_label(title_div.get_text(" ", strip=True) if title_div else "", "Title:")
 
-        # authors
         auth_div = dd.find("div", class_=re.compile(r"list-authors"))
-        authors = []
-        if auth_div:
-            for a in auth_div.find_all("a"):
-                name = a.get_text(" ", strip=True)
-                if name:
-                    authors.append(name)
+        authors = [a.get_text(" ", strip=True) for a in auth_div.find_all("a")] if auth_div else []
 
-        # abstract
-        abs_blk = dd.find("blockquote", class_=re.compile(r"abstract"))
-        abstract = ""
-        if abs_blk:
-            abstract = clean_label(abs_blk.get_text(" ", strip=True), "Abstract:")
+        # 关键修改：把 dd 里的全文拿出来（包含摘要那段文本）
+        fulltext = dd.get_text(" ", strip=True)
 
         out.append({
-            "category": section_title_prefix,   # 只是标注来源段落（New/Cross）
+            "category": section_title_prefix,
             "arxiv_id": arxiv_id,
             "title": title,
             "authors": authors,
-            "abstract": abstract,
             "link": link,
+            "fulltext": fulltext,  # 新增字段：用于匹配
         })
 
     return out
 
+
 def is_match(item) -> bool:
-    hay = " ".join([item.get("title",""), item.get("abstract","")])
+    hay = item.get("fulltext", "")
     return bool(REGEX.search(hay))
+
 
 def load_json(path):
     if not os.path.exists(path):
