@@ -42,6 +42,43 @@ def parse_listing_date(soup: BeautifulSoup) -> str:
     dt = datetime.strptime(date_str, "%A, %d %B %Y")
     return dt.date().isoformat()
 
+def parse_all_entries(soup: BeautifulSoup):
+    out = []
+    for dl in soup.find_all("dl"):
+        dts = dl.find_all("dt", recursive=False)
+        dds = dl.find_all("dd", recursive=False)
+        for dt, dd in zip(dts, dds):
+            dt_text = dt.get_text(" ", strip=True)
+
+            # 排除 replacements（在 /new 页面里会标成 "(replaced)"）
+            if "(replaced)" in dt_text:
+                continue
+
+            abs_a = dt.find("a", href=re.compile(r"^/abs/"))
+            if not abs_a or not abs_a.get("href"):
+                continue
+
+            link = "https://arxiv.org" + abs_a["href"].strip()
+            arxiv_id = abs_a.get_text(strip=True).replace("arXiv:", "").strip()
+
+            title_div = dd.find("div", class_=re.compile(r"list-title"))
+            title = clean_label(title_div.get_text(" ", strip=True) if title_div else "", "Title:")
+
+            auth_div = dd.find("div", class_=re.compile(r"list-authors"))
+            authors = [a.get_text(" ", strip=True) for a in auth_div.find_all("a")] if auth_div else []
+
+            fulltext = dd.get_text(" ", strip=True)
+
+            out.append({
+                "arxiv_id": arxiv_id,
+                "title": title,
+                "authors": authors,
+                "link": link,
+                "fulltext": fulltext,
+            })
+    return out
+
+
 def find_h3_startswith(soup: BeautifulSoup, prefix: str):
     for h3 in soup.find_all("h3"):
         txt = h3.get_text(" ", strip=True)
@@ -222,9 +259,8 @@ def main():
         day = parse_listing_date(soup)
         dates.append(day)
 
-        items = []
-        items += parse_section_entries(soup, "New submissions")
-        items += parse_section_entries(soup, "Cross-lists")
+        items = parse_all_entries(soup)
+
 
         # 写入时保留来源分类名（astro-ph.CO/gr-qc），便于统计
         for it in items:
