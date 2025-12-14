@@ -6,7 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 
 LIST_PAGES = {
-    "astro-ph.CO": "https://arxiv.org/list/astro-ph.CO/new",
+    "astro-ph": "https://arxiv.org/list/astro-ph/new",
     "gr-qc": "https://arxiv.org/list/gr-qc/new",
 }
 
@@ -232,7 +232,7 @@ def render_html(latest_day, items, stats, days_desc):
 <body>
   <h1>PBH arXiv Daily ({latest_day})</h1>
   <div class="meta">
-    来源：<code>astro-ph.CO/new</code> 与 <code>gr-qc/new</code>；规则：匹配关键词（PBH / primordial black hole），仅统计 New submissions + Cross-lists，不包含 Replacements。<br/>
+    来源：<code>astro-ph/new</code> 与 <code>gr-qc/new</code>；规则：匹配关键词（PBH / primordial black hole），仅统计 New submissions + Cross-lists，不包含 Replacements。<br/>
     已记录 <b>{stats["update_days"]}</b> 次 arXiv 更新批次；累计匹配 <b>{stats["total_papers"]}</b> 篇。
   </div>
 
@@ -313,7 +313,7 @@ def main():
 
         items = parse_all_entries(soup)
 
-        # 写入时保留来源分类名（astro-ph.CO/gr-qc），便于统计
+        # 写入时保留来源分类名（astro-ph/gr-qc），便于统计
         for it in items:
             it["source"] = name
 
