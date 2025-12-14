@@ -42,8 +42,15 @@ def parse_listing_date(soup: BeautifulSoup) -> str:
     dt = datetime.strptime(date_str, "%A, %d %B %Y")
     return dt.date().isoformat()
 
+def find_h3_startswith(soup: BeautifulSoup, prefix: str):
+    for h3 in soup.find_all("h3"):
+        txt = h3.get_text(" ", strip=True)
+        if txt.startswith(prefix):
+            return h3
+    return None
+
 def parse_section_entries(soup: BeautifulSoup, section_title_prefix: str):
-    h3 = soup.find("h3", string=lambda s: s and s.strip().startswith(section_title_prefix))
+    h3 = find_h3_startswith(soup, section_title_prefix)
     if not h3:
         return []
     dl = h3.find_next("dl")
@@ -87,8 +94,9 @@ def parse_section_entries(soup: BeautifulSoup, section_title_prefix: str):
 
 
 def is_match(item) -> bool:
-    hay = item.get("fulltext", "")
-    return bool(REGEX.search(hay))
+    return bool(REGEX.search(item.get("fulltext", "")))
+
+
 
 
 def load_json(path):
