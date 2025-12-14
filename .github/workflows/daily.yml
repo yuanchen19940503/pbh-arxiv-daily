@@ -1,10 +1,9 @@
 name: pbh-arxiv-daily
 
 on:
-  schedule:
-    # GitHub Actions 的 cron 使用 UTC 时间 :contentReference[oaicite:1]{index=1}
-    - cron: "20 6 * * *"   # 每天 06:20 UTC（里斯本冬令时=06:20；夏令时=07:20）
   workflow_dispatch:
+  schedule:
+    - cron: '30 9 * * *'
 
 permissions:
   contents: write
