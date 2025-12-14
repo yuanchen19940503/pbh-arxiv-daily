@@ -9,10 +9,19 @@
     .meta { color: #555; margin-bottom: 16px; }
     .cols { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
     @media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
+
     .item { padding: 12px 0; border-bottom: 1px solid #eee; }
+    .idline { font-size: 14px; }
+    .src { color: #666; margin-left: 8px; }
     .title { margin: 6px 0; }
+    .authors { font-size: 13px; color: #333; }
     .authors-hidden { display: none; }
+
     button { padding: 6px 10px; border: 1px solid #ccc; background: #fff; border-radius: 8px; cursor: pointer; }
+    button.authorBtn { width: 100%; text-align: left; }
+    .controls { display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0 18px 0; }
+    .hint { color:#666; font-size: 13px; margin-top: 6px; }
+
     code { background: #f6f8fa; padding: 2px 6px; border-radius: 6px; }
   </style>
 </head>
@@ -23,28 +32,61 @@
     已记录 <b>1</b> 次 arXiv 更新批次；累计匹配 <b>2</b> 篇。
   </div>
 
-  <div style="margin: 10px 0 18px 0;">
+  <div class="controls">
     <button id="toggleAuthors">显示/隐藏作者</button>
+    <button id="clearAuthor">清除作者筛选</button>
   </div>
 
   <div class="cols">
     <div>
       <h2>本批次匹配</h2>
-      <div class='item'><div><b>2512.10539</b></div><div class='title'><a href='https://arxiv.org/abs/2512.10539' target='_blank' rel='noopener'>BinaryGFH-v2: Improved method to search for gravitational waves from sub-solar-mass, ultra-compact binaries using the Generalized Frequency-Hough Transform</a></div><div class='authors authors-hidden'>Andrew L. Miller, Lorenzo Pierini</div></div>
-<div class='item'><div><b>2512.10381</b></div><div class='title'><a href='https://arxiv.org/abs/2512.10381' target='_blank' rel='noopener'>5D Rotating Black Holes as dark matter in Dark Dimension Scenario: Hawking Radiation versus the Memory Burden Effect</a></div><div class='authors authors-hidden'>George K. Leontaris, George Prampromis</div></div>
+      <div id="filterStatus" class="hint"></div>
+      <div class='item' data-source='gr-qc' data-authors='George K. Leontaris|George Prampromis'>  <div class='idline'><b>2512.10381</b> <span class='src'>gr-qc</span></div>  <div class='title'><a href='https://arxiv.org/abs/2512.10381' target='_blank' rel='noopener'>5D Rotating Black Holes as dark matter in Dark Dimension Scenario: Hawking Radiation versus the Memory Burden Effect</a></div>  <div class='authors authors-hidden'>George K. Leontaris, George Prampromis</div></div>
+<div class='item' data-source='gr-qc' data-authors='Andrew L. Miller|Lorenzo Pierini'>  <div class='idline'><b>2512.10539</b> <span class='src'>gr-qc</span></div>  <div class='title'><a href='https://arxiv.org/abs/2512.10539' target='_blank' rel='noopener'>BinaryGFH-v2: Improved method to search for gravitational waves from sub-solar-mass, ultra-compact binaries using the Generalized Frequency-Hough Transform</a></div>  <div class='authors authors-hidden'>Andrew L. Miller, Lorenzo Pierini</div></div>
     </div>
     <div>
       <h2>归档（最近30次更新 JSON）</h2>
       <ul><li><a href='data/2025-12-12.json' target='_blank' rel='noopener'>2025-12-12.json</a></li></ul>
 
       <h2 style="margin-top:18px;">Top 作者（累计匹配次数）</h2>
-      <ol><li>Andrew L. Miller — 1</li><li>George K. Leontaris — 1</li><li>George Prampromis — 1</li><li>Lorenzo Pierini — 1</li></ol>
+      <ol><li><button class='authorBtn' data-author='Andrew L. Miller'>Andrew L. Miller — 1</button></li><li><button class='authorBtn' data-author='George K. Leontaris'>George K. Leontaris — 1</button></li><li><button class='authorBtn' data-author='George Prampromis'>George Prampromis — 1</button></li><li><button class='authorBtn' data-author='Lorenzo Pierini'>Lorenzo Pierini — 1</button></li></ol>
+      <div class="hint">点击作者可筛选本批次条目。</div>
     </div>
   </div>
 
 <script>
+  // 显示/隐藏作者（默认隐藏）
   document.getElementById("toggleAuthors").addEventListener("click", () => {
     document.querySelectorAll(".authors").forEach(el => el.classList.toggle("authors-hidden"));
+  });
+
+  // 作者筛选（只筛本批次列表）
+  let selectedAuthor = "";
+
+  function applyAuthorFilter() {
+    const status = document.getElementById("filterStatus");
+    document.querySelectorAll(".item").forEach(el => {
+      if (!selectedAuthor) {
+        el.style.display = "";
+        return;
+      }
+      const authors = (el.dataset.authors || "");
+      const list = authors ? authors.split("|") : [];
+      el.style.display = list.includes(selectedAuthor) ? "" : "none";
+    });
+    status.textContent = selectedAuthor ? ("作者筛选： " + selectedAuthor) : "";
+  }
+
+  document.querySelectorAll(".authorBtn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      selectedAuthor = btn.dataset.author || "";
+      applyAuthorFilter();
+    });
+  });
+
+  document.getElementById("clearAuthor").addEventListener("click", () => {
+    selectedAuthor = "";
+    applyAuthorFilter();
   });
 </script>
 </body>

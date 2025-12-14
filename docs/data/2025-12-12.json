@@ -1,16 +1,6 @@
 [
   {
     "source": "gr-qc",
-    "arxiv_id": "2512.10539",
-    "title": "BinaryGFH-v2: Improved method to search for gravitational waves from sub-solar-mass, ultra-compact binaries using the Generalized Frequency-Hough Transform",
-    "authors": [
-      "Andrew L. Miller",
-      "Lorenzo Pierini"
-    ],
-    "link": "https://arxiv.org/abs/2512.10539"
-  },
-  {
-    "source": "gr-qc",
     "arxiv_id": "2512.10381",
     "title": "5D Rotating Black Holes as dark matter in Dark Dimension Scenario: Hawking Radiation versus the Memory Burden Effect",
     "authors": [
@@ -18,5 +8,15 @@
       "George Prampromis"
     ],
     "link": "https://arxiv.org/abs/2512.10381"
+  },
+  {
+    "source": "gr-qc",
+    "arxiv_id": "2512.10539",
+    "title": "BinaryGFH-v2: Improved method to search for gravitational waves from sub-solar-mass, ultra-compact binaries using the Generalized Frequency-Hough Transform",
+    "authors": [
+      "Andrew L. Miller",
+      "Lorenzo Pierini"
+    ],
+    "link": "https://arxiv.org/abs/2512.10539"
   }
 ]
