@@ -168,19 +168,23 @@ def compute_stats(days):
 
 def render_html(latest_day, items, stats, days_desc):
     def esc(s):
-        return (s or "").replace("&", "&amp;").replace("<","&lt;").replace(">","&gt;")
+        return (s or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
     if not items:
         items_html = "<p>该批次无匹配条目。</p>"
     else:
         blocks = []
         for it in items:
-            authors = ", ".join(it.get("authors", []))
+            authors_list = it.get("authors", []) or []
+            authors = ", ".join(authors_list)
+            authors_for_data = "|".join(authors_list)  # 用 | 分隔，便于 JS 精确匹配作者
+            source = it.get("source", "")
+
             blocks.append(
-                "<div class='item'>"
-                f"<div><b>{esc(it.get('arxiv_id',''))}</b></div>"
-                f"<div class='title'><a href='{esc(it.get('link',''))}' target='_blank' rel='noopener'>{esc(it.get('title',''))}</a></div>"
-                f"<div class='authors authors-hidden'>{esc(authors)}</div>"
+                f"<div class='item' data-source='{esc(source)}' data-authors='{esc(authors_for_data)}'>"
+                f"  <div class='idline'><b>{esc(it.get('arxiv_id',''))}</b> <span class='src'>{esc(source)}</span></div>"
+                f"  <div class='title'><a href='{esc(it.get('link',''))}' target='_blank' rel='noopener'>{esc(it.get('title',''))}</a></div>"
+                f"  <div class='authors authors-hidden'>{esc(authors)}</div>"
                 "</div>"
             )
         items_html = "\n".join(blocks)
@@ -189,9 +193,14 @@ def render_html(latest_day, items, stats, days_desc):
     for d in days_desc[:30]:
         archive_links += f"<li><a href='data/{d}.json' target='_blank' rel='noopener'>{d}.json</a></li>"
 
+    # Top authors：改成按钮，可点筛选
     top_auth = ""
     for name, cnt in stats["top_authors"]:
-        top_auth += f"<li>{esc(name)} — {cnt}</li>"
+        top_auth += (
+            f"<li>"
+            f"<button class='authorBtn' data-author='{esc(name)}'>{esc(name)} — {cnt}</button>"
+            f"</li>"
+        )
 
     return f"""<!doctype html>
 <html lang="zh">
@@ -204,10 +213,19 @@ def render_html(latest_day, items, stats, days_desc):
     .meta {{ color: #555; margin-bottom: 16px; }}
     .cols {{ display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }}
     @media (max-width: 900px) {{ .cols {{ grid-template-columns: 1fr; }} }}
+
     .item {{ padding: 12px 0; border-bottom: 1px solid #eee; }}
+    .idline {{ font-size: 14px; }}
+    .src {{ color: #666; margin-left: 8px; }}
     .title {{ margin: 6px 0; }}
+    .authors {{ font-size: 13px; color: #333; }}
     .authors-hidden {{ display: none; }}
+
     button {{ padding: 6px 10px; border: 1px solid #ccc; background: #fff; border-radius: 8px; cursor: pointer; }}
+    button.authorBtn {{ width: 100%; text-align: left; }}
+    .controls {{ display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0 18px 0; }}
+    .hint {{ color:#666; font-size: 13px; margin-top: 6px; }}
+
     code {{ background: #f6f8fa; padding: 2px 6px; border-radius: 6px; }}
   </style>
 </head>
@@ -218,13 +236,15 @@ def render_html(latest_day, items, stats, days_desc):
     已记录 <b>{stats["update_days"]}</b> 次 arXiv 更新批次；累计匹配 <b>{stats["total_papers"]}</b> 篇。
   </div>
 
-  <div style="margin: 10px 0 18px 0;">
+  <div class="controls">
     <button id="toggleAuthors">显示/隐藏作者</button>
+    <button id="clearAuthor">清除作者筛选</button>
   </div>
 
   <div class="cols">
     <div>
       <h2>本批次匹配</h2>
+      <div id="filterStatus" class="hint"></div>
       {items_html}
     </div>
     <div>
@@ -233,17 +253,49 @@ def render_html(latest_day, items, stats, days_desc):
 
       <h2 style="margin-top:18px;">Top 作者（累计匹配次数）</h2>
       <ol>{top_auth}</ol>
+      <div class="hint">点击作者可筛选本批次条目。</div>
     </div>
   </div>
 
 <script>
+  // 显示/隐藏作者（默认隐藏）
   document.getElementById("toggleAuthors").addEventListener("click", () => {{
     document.querySelectorAll(".authors").forEach(el => el.classList.toggle("authors-hidden"));
+  }});
+
+  // 作者筛选（只筛本批次列表）
+  let selectedAuthor = "";
+
+  function applyAuthorFilter() {{
+    const status = document.getElementById("filterStatus");
+    document.querySelectorAll(".item").forEach(el => {{
+      if (!selectedAuthor) {{
+        el.style.display = "";
+        return;
+      }}
+      const authors = (el.dataset.authors || "");
+      const list = authors ? authors.split("|") : [];
+      el.style.display = list.includes(selectedAuthor) ? "" : "none";
+    }});
+    status.textContent = selectedAuthor ? ("作者筛选： " + selectedAuthor) : "";
+  }}
+
+  document.querySelectorAll(".authorBtn").forEach(btn => {{
+    btn.addEventListener("click", () => {{
+      selectedAuthor = btn.dataset.author || "";
+      applyAuthorFilter();
+    }});
+  }});
+
+  document.getElementById("clearAuthor").addEventListener("click", () => {{
+    selectedAuthor = "";
+    applyAuthorFilter();
   }});
 </script>
 </body>
 </html>
 """
+
 
 def main():
     ensure_dirs()
@@ -261,7 +313,6 @@ def main():
 
         items = parse_all_entries(soup)
 
-
         # 写入时保留来源分类名（astro-ph.CO/gr-qc），便于统计
         for it in items:
             it["source"] = name
@@ -270,20 +321,45 @@ def main():
 
     latest_day = max(dates)
 
-    # 合并两个页面中“属于同一批次日期”的条目
-    merged = []
-    for name, (day, items) in parsed.items():
+    # 先收集原始匹配结果
+    merged_raw = []
+    for _, (day, items) in parsed.items():
         if day != latest_day:
             continue
         for it in items:
             if is_match(it):
-                merged.append({
-                    "source": it["source"],          # astro-ph.CO or gr-qc
-                    "arxiv_id": it["arxiv_id"],
-                    "title": it["title"],
-                    "authors": it["authors"],
-                    "link": it["link"],
+                merged_raw.append({
+                    "source": it.get("source", ""),
+                    "arxiv_id": it.get("arxiv_id", ""),
+                    "title": it.get("title", ""),
+                    "authors": it.get("authors", []) or [],
+                    "link": it.get("link", ""),
                 })
+
+    # A1：按 arXiv_id 去重，并合并 source（同一篇可能同时出现在两个页面）
+    by_id = {}
+    for it in merged_raw:
+        k = it["arxiv_id"]
+        if not k:
+            continue
+        if k not in by_id:
+            by_id[k] = it
+            by_id[k]["_sourceset"] = {it["source"]} if it["source"] else set()
+        else:
+            if it["source"]:
+                by_id[k]["_sourceset"].add(it["source"])
+
+            # 可选：如果某次抓到的 title/authors/link 更完整，可在此处做覆盖策略
+            # 这里默认不覆盖，保持首次为准
+
+    merged = []
+    for k, it in by_id.items():
+        sources = sorted(list(it.pop("_sourceset", set())))
+        it["source"] = ", ".join(sources) if sources else it.get("source", "")
+        merged.append(it)
+
+    # 稳定排序：先 source 再 arxiv_id
+    merged.sort(key=lambda x: (x.get("source", ""), x.get("arxiv_id", "")))
 
     day_path = f"docs/data/{latest_day}.json"
     existing = load_json(day_path)
@@ -304,5 +380,7 @@ def main():
     with open("docs/.nojekyll", "w", encoding="utf-8") as f:
         f.write("")
 
+
 if __name__ == "__main__":
     main()
+
