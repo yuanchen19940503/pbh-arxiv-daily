@@ -1,0 +1,23 @@
+[
+  {
+    "source": "astro-ph",
+    "arxiv_id": "2512.12227",
+    "title": "The Merger Rate of Primordial Black Holes",
+    "authors": [
+      "Muhsin Aljaf",
+      "Ilias Cholis"
+    ],
+    "link": "https://arxiv.org/abs/2512.12227"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2512.13648",
+    "title": "The impact of non-Gaussianity when searching for Primordial Black Holes with LISA",
+    "authors": [
+      "Antonio Junior Iovino",
+      "Gabriele Perna",
+      "Hardi Veermäe"
+    ],
+    "link": "https://arxiv.org/abs/2512.13648"
+  }
+]
