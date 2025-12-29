@@ -1,0 +1,39 @@
+[
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2512.21738",
+    "title": "Methods for Detecting Gravitational Waves from mini-Extreme-Mass-Ratio Inspirals I: Statistics Based on Time-Frequency Signal Tracks",
+    "authors": [
+      "Zi-Xuan Wang",
+      "Gong Cheng",
+      "Ju Chen",
+      "Huai-Ke Guo",
+      "Andrew L. Miller"
+    ],
+    "link": "https://arxiv.org/abs/2512.21738"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2512.21739",
+    "title": "Methods for Detecting Gravitational Waves from mini-Extreme-Mass-Ratio Inspirals II: A Spectral-Leakage-Aware Framework",
+    "authors": [
+      "Zi-Xuan Wang",
+      "Xing-Yu Chen",
+      "Ju Chen",
+      "Gong Cheng",
+      "Huai-Ke Guo",
+      "Andrew L. Miller"
+    ],
+    "link": "https://arxiv.org/abs/2512.21739"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2512.22075",
+    "title": "Primordial black holes and smooth coarse-graining in excursion set theory",
+    "authors": [
+      "Daiki Saito",
+      "Koki Tokeshi"
+    ],
+    "link": "https://arxiv.org/abs/2512.22075"
+  }
+]
