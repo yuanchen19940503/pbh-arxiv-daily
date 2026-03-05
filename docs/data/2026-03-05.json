@@ -1,0 +1,32 @@
+[
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2603.03446",
+    "title": "Illuminating the dark universe in the multi-messenger era",
+    "authors": [
+      "Philippe Brax",
+      "Anne-Christine Davis",
+      "Md Riajul Haque",
+      "Cédric Jockel",
+      "Gaetano Lambiase",
+      "Michiru Uwabo-Niibo",
+      "Mohsen Khodadi",
+      "Tanmay Kumar Poddar",
+      "Laura Sagunski",
+      "Luca Visinelli",
+      "Jun Zhang"
+    ],
+    "link": "https://arxiv.org/abs/2603.03446"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2603.04185",
+    "title": "Excursion-set for Primordial Black Holes I: white noise and moving barrier",
+    "authors": [
+      "Pierre Auclair",
+      "Baptiste Blachier",
+      "Vincent Vennin"
+    ],
+    "link": "https://arxiv.org/abs/2603.04185"
+  }
+]
