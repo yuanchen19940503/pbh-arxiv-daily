@@ -1,0 +1,33 @@
+[
+  {
+    "source": "astro-ph",
+    "arxiv_id": "2603.04784",
+    "title": "Accelerating massive galaxy formation with primordial black hole seed nuclei",
+    "authors": [
+      "Jeremy Mould"
+    ],
+    "link": "https://arxiv.org/abs/2603.04784"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2603.04850",
+    "title": "STOchastic LAttice Simulation of hybrid inflation",
+    "authors": [
+      "Tomoaki Murata",
+      "Yuichiro Tada"
+    ],
+    "link": "https://arxiv.org/abs/2603.04850"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2603.05191",
+    "title": "Reassessing the SIGW Interpretation of PTA Signal: The Role of Third-Order Gravitational Waves and Implications for the PBH Overproduction",
+    "authors": [
+      "Zhi-Chao Zhao",
+      "Sai Wang",
+      "Qing-Hua Zhu",
+      "Xin Zhang"
+    ],
+    "link": "https://arxiv.org/abs/2603.05191"
+  }
+]
