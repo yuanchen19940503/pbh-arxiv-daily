@@ -1,0 +1,34 @@
+[
+  {
+    "source": "astro-ph",
+    "arxiv_id": "2603.23412",
+    "title": "Microlensing by Cluster of Primordial Black Holes",
+    "authors": [
+      "K.A. Toshchenko",
+      "P.V. Baklanov",
+      "K.M. Belotsky",
+      "S.I. Blinnikov"
+    ],
+    "link": "https://arxiv.org/abs/2603.23412"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2603.23025",
+    "title": "Revisiting Constraints on Primordial Curvature Power Spectrum from PBH Abundances",
+    "authors": [
+      "Ashu Kushwaha",
+      "Teruaki Suyama"
+    ],
+    "link": "https://arxiv.org/abs/2603.23025"
+  },
+  {
+    "source": "gr-qc",
+    "arxiv_id": "2603.22516",
+    "title": "Quantum Tunneling of Primordial Black Holes to White Holes: Rates, Constraints, and Implications for Fast Radio Bursts",
+    "authors": [
+      "Christopher Ewasiuk",
+      "Stefano Profumo"
+    ],
+    "link": "https://arxiv.org/abs/2603.22516"
+  }
+]
