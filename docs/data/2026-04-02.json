@@ -1,0 +1,34 @@
+[
+  {
+    "source": "astro-ph",
+    "arxiv_id": "2604.00090",
+    "title": "Non-Cold Dark Matter from Memory-Burdened Primordial Black Holes",
+    "authors": [
+      "Valentin Thoss",
+      "Laura Lopez-Honorez",
+      "Florian Kühnel",
+      "Marco Hufnagel"
+    ],
+    "link": "https://arxiv.org/abs/2604.00090"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2604.00111",
+    "title": "Eppur non si trovano Vol. 2: No Planetary-mass Primordial Black Holes toward the Andromeda Galaxy",
+    "authors": [
+      "Przemek Mróz",
+      "Andrzej Udalski"
+    ],
+    "link": "https://arxiv.org/abs/2604.00111"
+  },
+  {
+    "source": "gr-qc",
+    "arxiv_id": "2604.00515",
+    "title": "Quantum Oppenheimer-Snyder primordial black holes as all the dark matter",
+    "authors": [
+      "Li-Shuai Wang",
+      "Xiangdong Zhang"
+    ],
+    "link": "https://arxiv.org/abs/2604.00515"
+  }
+]
