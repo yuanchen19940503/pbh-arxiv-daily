@@ -1,0 +1,33 @@
+[
+  {
+    "source": "astro-ph",
+    "arxiv_id": "2604.12020",
+    "title": "Beyond the Standard Model of Cosmology: Testing new paradigms with a Multiprobe Exploration of the Dark Universe",
+    "authors": [
+      "Juan Garcia-Bellido"
+    ],
+    "link": "https://arxiv.org/abs/2604.12020"
+  },
+  {
+    "source": "astro-ph",
+    "arxiv_id": "2604.12581",
+    "title": "Primordial Black Holes Formation Beyond the Standard Cosmic QCD Transition",
+    "authors": [
+      "Maël Gonin",
+      "Oleksii Ivanytskyi",
+      "David Blaschke",
+      "Günther Hasinger"
+    ],
+    "link": "https://arxiv.org/abs/2604.12581"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2604.13012",
+    "title": "Probing Scalar-Tensor-Induced Gravitational Waves in the nHz Band: $\\texttt{NANOGrav}$ and SKA",
+    "authors": [
+      "William Iania",
+      "Angelo Ricciardone"
+    ],
+    "link": "https://arxiv.org/abs/2604.13012"
+  }
+]
