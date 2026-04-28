@@ -1,0 +1,33 @@
+[
+  {
+    "source": "astro-ph",
+    "arxiv_id": "2604.22961",
+    "title": "The Oort Cloud as a Gravitational Detector for Primordial Black Holes",
+    "authors": [
+      "Sohrab Rahvar"
+    ],
+    "link": "https://arxiv.org/abs/2604.22961"
+  },
+  {
+    "source": "gr-qc",
+    "arxiv_id": "2604.22634",
+    "title": "Constraints on the Primordial Black Hole Abundance using Pulsar Parameter Drifts",
+    "authors": [
+      "Yan-Chen Bi",
+      "Yu-Mei Wu",
+      "Qing-Guo Huang"
+    ],
+    "link": "https://arxiv.org/abs/2604.22634"
+  },
+  {
+    "source": "gr-qc",
+    "arxiv_id": "2604.24011",
+    "title": "Primordial black hole production in scalar field inflation within $f(T)$ gravity",
+    "authors": [
+      "Daniel Villalobos-Silva",
+      "Yerko Vásquez",
+      "Giovanni Otalora"
+    ],
+    "link": "https://arxiv.org/abs/2604.24011"
+  }
+]
