@@ -1,0 +1,24 @@
+[
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2605.28953",
+    "title": "Signatures of loop quantum gravity in primordial black hole cosmologies",
+    "authors": [
+      "Antoine Dierckx",
+      "Sébastien Clesse",
+      "Francesca Vidotto"
+    ],
+    "link": "https://arxiv.org/abs/2605.28953"
+  },
+  {
+    "source": "gr-qc",
+    "arxiv_id": "2605.30340",
+    "title": "Carr criterion and mass gaps in non-singular primordial black hole formation",
+    "authors": [
+      "Jens Boos",
+      "Arif Kağan Gündoğdu",
+      "Marek Hartenfels"
+    ],
+    "link": "https://arxiv.org/abs/2605.30340"
+  }
+]
