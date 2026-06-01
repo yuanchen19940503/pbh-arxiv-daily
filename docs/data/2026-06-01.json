@@ -1,0 +1,27 @@
+[
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2605.31323",
+    "title": "Time-reversed stochastic inflation in the quantum well",
+    "authors": [
+      "Chiara Animali",
+      "Baptiste Blachier",
+      "Nanoka Okada",
+      "Christophe Ringeval",
+      "Tomo Takahashi",
+      "Koki Tokeshi"
+    ],
+    "link": "https://arxiv.org/abs/2605.31323"
+  },
+  {
+    "source": "gr-qc",
+    "arxiv_id": "2605.30446",
+    "title": "Cosmological accretion onto braneworld black holes: a relativistic treatment",
+    "authors": [
+      "Itzi Aldecoa-Tamayo",
+      "Christian T. Byrnes",
+      "David Seery"
+    ],
+    "link": "https://arxiv.org/abs/2605.30446"
+  }
+]
