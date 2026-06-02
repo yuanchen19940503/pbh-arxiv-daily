@@ -1,0 +1,40 @@
+[
+  {
+    "source": "astro-ph",
+    "arxiv_id": "2606.01580",
+    "title": "Primordial black holes spin from cosmological first-order phase transitions",
+    "authors": [
+      "Yu-Shi Hao"
+    ],
+    "link": "https://arxiv.org/abs/2606.01580"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2606.00176",
+    "title": "Eigenvalue formulation of Stochastic Inflation and application to large perturbation generating inflationary features",
+    "authors": [
+      "Swagat S. Mishra",
+      "Edmund J. Copeland",
+      "Anne M. Green"
+    ],
+    "link": "https://arxiv.org/abs/2606.00176"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2606.02053",
+    "title": "COSMOS: A numerical relativity code specialized for PBH formation",
+    "authors": [
+      "Chul-Moon Yoo",
+      "Hirotada Okawa",
+      "Albert Escrivà",
+      "Tomohiro Harada",
+      "Hayami Iizuka",
+      "Taishi Ikeda",
+      "Yasutaka Koga",
+      "Daiki Saito",
+      "Masaaki Shimada",
+      "Koichiro Uehara"
+    ],
+    "link": "https://arxiv.org/abs/2606.02053"
+  }
+]
