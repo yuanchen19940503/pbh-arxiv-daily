@@ -1,0 +1,47 @@
+[
+  {
+    "source": "astro-ph",
+    "arxiv_id": "2606.02726",
+    "title": "Accretion of Primordial Black Holes in Stellar Interiors",
+    "authors": [
+      "Matteo Cantiello",
+      "Ore Gottlieb",
+      "Cameron Norton",
+      "Matthew Kleban",
+      "Ken Van Tilburg"
+    ],
+    "link": "https://arxiv.org/abs/2606.02726"
+  },
+  {
+    "source": "astro-ph",
+    "arxiv_id": "2606.03316",
+    "title": "Deficit of primordial Li7 and primordial black holes",
+    "authors": [
+      "E.V.Arbuzova",
+      "A.D.Dolgov"
+    ],
+    "link": "https://arxiv.org/abs/2606.03316"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2606.02700",
+    "title": "The Life and Death of Stars That Capture Primordial Black Holes",
+    "authors": [
+      "Ore Gottlieb",
+      "Matteo Cantiello",
+      "Cameron Norton",
+      "Ken Van Tilburg",
+      "Matthew Kleban"
+    ],
+    "link": "https://arxiv.org/abs/2606.02700"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2606.03414",
+    "title": "Hidden-sector accretion and warped black-string seeds for high-redshift supermassive black holes",
+    "authors": [
+      "Chunshan Lin"
+    ],
+    "link": "https://arxiv.org/abs/2606.03414"
+  }
+]
