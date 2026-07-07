@@ -1,0 +1,33 @@
+[
+  {
+    "source": "astro-ph",
+    "arxiv_id": "2607.03724",
+    "title": "Three body Simulations of a Primordial Black Hole Encounter with the TOI 2796 System",
+    "authors": [
+      "S.V. Vereshchagin",
+      "M. I. Kamentsev"
+    ],
+    "link": "https://arxiv.org/abs/2607.03724"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2607.03138",
+    "title": "Evading the CMB $μ$-distortion bound on Supermassive Primordial Black Hole seeds with Non-Gaussian tails",
+    "authors": [
+      "Sanket Dave",
+      "Sheng-Feng Yan",
+      "Amara Ilyas",
+      "Yi-Fu Cai"
+    ],
+    "link": "https://arxiv.org/abs/2607.03138"
+  },
+  {
+    "source": "gr-qc",
+    "arxiv_id": "2607.02935",
+    "title": "Decoherence Effects on Primordial Black Holes and Scalar-Induced Gravitational Waves",
+    "authors": [
+      "Waqas Ahmed"
+    ],
+    "link": "https://arxiv.org/abs/2607.02935"
+  }
+]
