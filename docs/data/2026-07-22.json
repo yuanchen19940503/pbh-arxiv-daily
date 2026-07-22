@@ -1,0 +1,24 @@
+[
+  {
+    "source": "astro-ph",
+    "arxiv_id": "2607.18528",
+    "title": "The impact of Hawking radiation from primordial black holes on recombination and the Hubble tension",
+    "authors": [
+      "Adam Batten",
+      "Jeremy Mould"
+    ],
+    "link": "https://arxiv.org/abs/2607.18528"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2607.18352",
+    "title": "Search for Planetary-mass Black Holes with an Improved Viterbi Algorithm",
+    "authors": [
+      "Raul Rodriguez",
+      "George Alestas",
+      "Sachiko Kuroyanagi",
+      "Juan Garcia-Bellido"
+    ],
+    "link": "https://arxiv.org/abs/2607.18352"
+  }
+]
