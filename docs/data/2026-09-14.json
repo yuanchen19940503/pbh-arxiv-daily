@@ -1,0 +1,50 @@
+[
+  {
+    "source": "astro-ph",
+    "arxiv_id": "2609.12044",
+    "title": "Constraining dark matter using 20-year INTEGRAL/IBIS observations I: Primordial black holes",
+    "authors": [
+      "Jordan Koechler",
+      "Pedro De la Torre Luque"
+    ],
+    "link": "https://arxiv.org/abs/2609.12044"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2609.12058",
+    "title": "Accretion onto a moving black hole for stiff equations of state",
+    "authors": [
+      "Elliott Ewell",
+      "Peter K. Harris",
+      "Thomas W. Baumgarte",
+      "Stuart L. Shapiro"
+    ],
+    "link": "https://arxiv.org/abs/2609.12058"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2609.12476",
+    "title": "A semicoherent resampling method for long-transient gravitational wave searches with applications to subsolar-mass primordial black-hole binaries",
+    "authors": [
+      "Neil Lu",
+      "Cristiano Palomba",
+      "Ornella J. Piccinni",
+      "Ling Sun"
+    ],
+    "link": "https://arxiv.org/abs/2609.12476"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2609.12867",
+    "title": "Probing Inflationary Origins of Primordial Black Holes with LIGO--Virgo--KAGRA O1--O4a data",
+    "authors": [
+      "Haipeng An",
+      "Huai-Ke Guo",
+      "Mai Qiao",
+      "Lian-Tao Wang",
+      "Chen Yang",
+      "Yue Zhao"
+    ],
+    "link": "https://arxiv.org/abs/2609.12867"
+  }
+]
