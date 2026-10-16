@@ -1,0 +1,40 @@
+[
+  {
+    "source": "astro-ph",
+    "arxiv_id": "2610.18997",
+    "title": "The Forgetful Black Hole: Memory Burden and Hysteresis in Hawking Evaporation",
+    "authors": [
+      "Yen Chin Ong"
+    ],
+    "link": "https://arxiv.org/abs/2610.18997"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2610.21658",
+    "title": "From Cosmic Bounces to Primordial Black Holes: The Role of Primordial Magnetic Fields",
+    "authors": [
+      "Ajeet Singhal",
+      "Shreya Banerjee"
+    ],
+    "link": "https://arxiv.org/abs/2610.21658"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2610.21951",
+    "title": "Stimulated capture of axion dark matter around primordial black holes",
+    "authors": [
+      "Nuno P. Branco",
+      "João G. Rosa"
+    ],
+    "link": "https://arxiv.org/abs/2610.21951"
+  },
+  {
+    "source": "gr-qc",
+    "arxiv_id": "2610.20996",
+    "title": "Quantum-Corrected and Hairy Black Holes via Analogue Gravity",
+    "authors": [
+      "Christian Noberto de Souza"
+    ],
+    "link": "https://arxiv.org/abs/2610.20996"
+  }
+]
