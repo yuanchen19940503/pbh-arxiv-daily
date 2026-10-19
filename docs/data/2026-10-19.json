@@ -1,0 +1,23 @@
+[
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2610.23218",
+    "title": "Simulating dust collapse: the impact of gauge choices on primordial black hole formation",
+    "authors": [
+      "Robyn L. Munoz",
+      "Christian T. Byrnes",
+      "Marco Bruni",
+      "Ian Hawke"
+    ],
+    "link": "https://arxiv.org/abs/2610.23218"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2610.23806",
+    "title": "Clustering of JWST LRDs. Implications for PBHs and other early-forming seeds",
+    "authors": [
+      "Gert Hütsi"
+    ],
+    "link": "https://arxiv.org/abs/2610.23806"
+  }
+]
