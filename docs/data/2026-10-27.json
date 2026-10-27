@@ -1,0 +1,21 @@
+[
+  {
+    "source": "astro-ph",
+    "arxiv_id": "2610.35703",
+    "title": "pbhalo: computing primordial black hole and minihalo populations from a single primordial perturbation spectrum",
+    "authors": [
+      "B.A. Rudenko"
+    ],
+    "link": "https://arxiv.org/abs/2610.35703"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2610.33314",
+    "title": "Neutron Star--Primordial Black Hole Binaries: Dynamical Tides, Resonance Locking, and Gravitational Waves",
+    "authors": [
+      "Isaac Legred",
+      "Nicolás Yunes"
+    ],
+    "link": "https://arxiv.org/abs/2610.33314"
+  }
+]
