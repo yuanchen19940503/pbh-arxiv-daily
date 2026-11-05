@@ -1,0 +1,42 @@
+[
+  {
+    "source": "astro-ph",
+    "arxiv_id": "2611.05566",
+    "title": "PrimordialPy: A Python library for single-field inflation, primordial black holes, and scalar-induced gravitational waves",
+    "authors": [
+      "Flavio Pineda"
+    ],
+    "link": "https://arxiv.org/abs/2611.05566"
+  },
+  {
+    "source": "astro-ph",
+    "arxiv_id": "2611.06329",
+    "title": "Primordial Black Holes and Induced Gravitational Waves from Inflation with History-Dependent Effective Dissipation",
+    "authors": [
+      "Narges Rashidi"
+    ],
+    "link": "https://arxiv.org/abs/2611.06329"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2611.05747",
+    "title": "The Cosmology of Hawking Axions",
+    "authors": [
+      "Abdelaziz Hussein",
+      "Gordan Krnjaic",
+      "Sarunas Verner"
+    ],
+    "link": "https://arxiv.org/abs/2611.05747"
+  },
+  {
+    "source": "astro-ph, gr-qc",
+    "arxiv_id": "2611.05947",
+    "title": "Gravitational-Wave Microlensing as a Probe of Compact Object Population",
+    "authors": [
+      "Eungwang Seo",
+      "Jose María Ezquiaga",
+      "Martin Hendry"
+    ],
+    "link": "https://arxiv.org/abs/2611.05947"
+  }
+]
